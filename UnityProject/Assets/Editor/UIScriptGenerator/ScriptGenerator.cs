@@ -71,7 +71,7 @@ namespace TEngine.Editor.UI
 
                 if (includeListener)
                 {
-#if ENABLE_TEXTMESHPRO
+#if TextMeshPro
                     strFile.Append("using TMPro;\n");
 #endif
                     if (isUniTask)
@@ -140,7 +140,7 @@ namespace TEngine.Editor.UI
             {
                 Transform child = transform.GetChild(i);
                 WriteScript(root, child, ref strVar, ref strBind, ref strOnCreate, ref strCallback, isUniTask);
-                if (child.name.StartsWith("m_item"))
+                if (child.name.StartsWith(GetUIWidgetName()))
                 {
                     continue;
                 }
@@ -271,10 +271,12 @@ namespace TEngine.Editor.UI
                     default:
                         if (isUIWidget)
                         {
-                            strBind.Append($"\t\t\t{varName} = CreateWidgetByType<{componentName}>(\"{varPath}\");\n");
+                            strBind.Append($"\t\t\t{varName} = CreateWidget<{componentName}>(\"{varPath}\");\n");
                         }
-
-                        strBind.Append($"\t\t\t{varName} = FindChildComponent<{componentName}>(\"{varPath}\");\n");
+                        else
+                        {
+                            strBind.Append($"\t\t\t{varName} = FindChildComponent<{componentName}>(\"{varPath}\");\n");
+                        }
                         break;
                 }
 
